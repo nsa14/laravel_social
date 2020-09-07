@@ -823,7 +823,7 @@ class AdminController extends Controller
         //[{"name":"naser-zare.ir","ranklocal":null,"rankglobal":null,
         //"location":"http:\/\/naser-zare.ir\/cgi-sys\/suspendedpage.cgi","statuscode":"HTTP\/1.1 302 Found"}]
 
-        foreach ($getResult as $key => $value) {
+        foreach ($getResult as $key => $value) {       
 
             // dd($value);            
 
