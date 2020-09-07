@@ -819,6 +819,7 @@ class AdminController extends Controller
         $getResult = $this->get_alexa_checkRank($splitedArray);
 
         // return $getResult;
+
         //[{"name":"naser-zare.ir","ranklocal":null,"rankglobal":null,
         //"location":"http:\/\/naser-zare.ir\/cgi-sys\/suspendedpage.cgi","statuscode":"HTTP\/1.1 302 Found"}]
 
@@ -834,7 +835,7 @@ class AdminController extends Controller
 
             if (domains::where('url', '=', $host[0])->exists()) {
                 // domain found ... then updated record
-                $rowId = domains::where('url', '=', $value['name'])->first();
+                $rowId = domains::where('url', '=',  $host[0])->first();
                 // return $rowId;
                 // exit();
 
@@ -846,19 +847,20 @@ class AdminController extends Controller
                 $domainTable->localrank = $value['ranklocal'][0];
                 $domainTable->redirect_to = $value['location'];
                 $domainTable->status_code = $value['statuscode'];
+                $domainTable->title =  $value['metaDescriptionUrl'];
 
                 $domainTable->save();
                 array_push($updatedDomain, $value['name']);
 
             }else{
 
-                $host = explode('.', $value['name']);
+                // $host = explode('.', $value['name']);
 
                 $domainTable->url = $host[0];
                 $domainTable->dot = $host[1];
                 $domainTable->globalrank = $value['rankglobal'][0];
                 $domainTable->localrank = $value['ranklocal'][0];
-                // $domainTable->title = 
+                $domainTable->title =  $value['metaDescriptionUrl'];
                 // $domainTable->howis = 
                 // $domainTable->expertion_date = 
                 // $domainTable->redirect = 
@@ -944,12 +946,17 @@ class AdminController extends Controller
             }
 
             if (isset($arr0)) {
+
                 $headerCode = $arr0['HTT'];
-                $location = $arr0['Loc'];
+                $locarion_filter = str_replace(array('http://','https://','www.', '/'), '', $arr0['Loc']);
+                if ($url == $locarion_filter) {
+                    $location = null; // redirect nashode va code 301 dare. roye https redirect shode.
+                }else{
+                    $location = $arr0['Loc']; // redirect shode roye other domain.
+                }
             }
 
             $tags = get_meta_tags('http://'. $url .'/');
-
             if(isset($tags['description'])){
                 $metaDescriptionUrl = $tags['description'];
             }else{
@@ -957,7 +964,7 @@ class AdminController extends Controller
             }
 
 
-            $arr = Arr::add(['name' => $url, 'ranklocal' => $ranklocal, 'rankglobal' => $rankglobal, 'location' => $location], 'statuscode', $headerCode);
+            $arr = Arr::add(['name' => $url, 'ranklocal' => $ranklocal, 'rankglobal' => $rankglobal, 'location' => $location, 'metaDescriptionUrl' => $metaDescriptionUrl], 'statuscode', $headerCode);
             $result[$i] = $arr;
         }
   

@@ -38,10 +38,10 @@
                                             <td> {{ $domain->dot }} </td>
                                             <td class="center"> {{ $domain->globalrank }}</td>
                                             <td class="center">{{ $domain->localrank }}</td>
-                                            <td style="word-wrap: break-word;font-size: 10px;">{{ $domain->title }}</td>
+                                            <td style="font-size: 10px; word-wrap: break-word;min-width: 160px;max-width: 160px;">{{ $domain->title }}</td>
                                             <td class="center">{{ $domain->howis }}</td>
                                             <td class="center">{{ $domain->expertion_date }}</td>
-                                            <td class="center">{{ $domain->redirect_to }}</td>
+                                            <td class="center text-sm">{{ $domain->redirect_to }}</td>
                                             <td class="center">{{ $domain->status_code }}</td>
 
                                             @php
