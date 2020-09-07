@@ -818,17 +818,21 @@ class AdminController extends Controller
 
         $getResult = $this->get_alexa_checkRank($splitedArray);
 
-        return $getResult;
+        // return $getResult;
+        //[{"name":"naser-zare.ir","ranklocal":null,"rankglobal":null,
+        //"location":"http:\/\/naser-zare.ir\/cgi-sys\/suspendedpage.cgi","statuscode":"HTTP\/1.1 302 Found"}]
 
         foreach ($getResult as $key => $value) {
 
-            // dd($value);
+            // dd($value);            
 
             // echo $value['name'].$value['ranklocal'][0].'<br>';
 
             $domainTable = new domains;
 
-            if (domains::where('url', '=', $value['name'])->exists()) {
+            $host = explode('.', $value['name']); // explade yjc . ir
+
+            if (domains::where('url', '=', $host[0])->exists()) {
                 // domain found ... then updated record
                 $rowId = domains::where('url', '=', $value['name'])->first();
                 // return $rowId;
@@ -840,6 +844,8 @@ class AdminController extends Controller
 
                 $domainTable->globalrank = $value['rankglobal'][0];
                 $domainTable->localrank = $value['ranklocal'][0];
+                $domainTable->redirect_to = $value['location'];
+                $domainTable->status_code = $value['statuscode'];
 
                 $domainTable->save();
                 array_push($updatedDomain, $value['name']);
@@ -856,8 +862,8 @@ class AdminController extends Controller
                 // $domainTable->howis = 
                 // $domainTable->expertion_date = 
                 // $domainTable->redirect = 
-                // $domainTable->redirect_to = 
-                // $domainTable->status_code = 
+                $domainTable->redirect_to = $value['location'];
+                $domainTable->status_code = $value['statuscode'];
                 // $domainTable->description = 
 
                 $domainTable->save();
@@ -884,7 +890,7 @@ class AdminController extends Controller
 
         $result = array();
         $arr0 = array();
-        global $ranklocal, $rankglobal;
+        global $ranklocal, $rankglobal, $metaDescriptionUrl;
 
         foreach ($urls as $i => $url){
 
@@ -941,6 +947,15 @@ class AdminController extends Controller
                 $headerCode = $arr0['HTT'];
                 $location = $arr0['Loc'];
             }
+
+            $tags = get_meta_tags('http://'. $url .'/');
+
+            if(isset($tags['description'])){
+                $metaDescriptionUrl = $tags['description'];
+            }else{
+                $metaDescriptionUrl = null;
+            }
+
 
             $arr = Arr::add(['name' => $url, 'ranklocal' => $ranklocal, 'rankglobal' => $rankglobal, 'location' => $location], 'statuscode', $headerCode);
             $result[$i] = $arr;

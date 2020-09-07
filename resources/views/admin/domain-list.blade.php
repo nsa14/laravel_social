@@ -9,6 +9,7 @@
                         <div class="panel-heading">
                             لیست کلیه اکانت های لایکی ثبت شده در سامانه
                         </div>
+
                         <!-- /.panel-heading -->
                         <div class="panel-body">
                             <div class="table-responsive">
@@ -40,8 +41,8 @@
                                             <td style="word-wrap: break-word;font-size: 10px;">{{ $domain->title }}</td>
                                             <td class="center">{{ $domain->howis }}</td>
                                             <td class="center">{{ $domain->expertion_date }}</td>
-                                            <td class="center">{{ $domain->redirect }}</td>
-                                            <td class="center">{{ $domain->code }}</td>
+                                            <td class="center">{{ $domain->redirect_to }}</td>
+                                            <td class="center">{{ $domain->status_code }}</td>
 
                                             @php
                                                 $faUpdatedAt = new Verta($domain->updated_at);
