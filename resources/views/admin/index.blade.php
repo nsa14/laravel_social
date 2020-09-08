@@ -53,11 +53,11 @@
                 <div class="panel-heading">
                     <div class="row">
                         <div class="col-xs-4">
-                            <i class="fa  fa-5x"></i>
+                            <i class="fa fa-life-ring fa-5x"></i>
                         </div>
                         <div class="col-xs-8 text-right">
-                            <div class="huge">0</div>
-                            <div>-</div>
+                            <div class="huge">{{ $countDomains }}</div>
+                            <div>تعداد دامنه ها</div>
                         </div>
                     </div>
                 </div>

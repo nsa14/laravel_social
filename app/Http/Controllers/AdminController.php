@@ -25,8 +25,9 @@ class AdminController extends Controller
 
         $countInstagram = instagrams::get()->count();
         $countLikee = likee::get()->count();
+        $countDomains = domains::get()->count();
 
-        return view('admin.index', compact('countInstagram', 'countLikee'));
+        return view('admin.index', compact('countInstagram', 'countLikee', 'countDomains'));
     }
 
     public function instagramList(){
@@ -948,17 +949,17 @@ class AdminController extends Controller
 
             if (isset($arr0)) {
 
-                $headerCode = $arr0['HTT'];
-                $locarion_filter = str_replace(array('http://','https://','www.', '/'), '', $arr0['Loc']);
+                $headerCode = @$arr0['HTT'];
+                $locarion_filter = str_replace(array('http://','https://','www.', '/'), '', @$arr0['Loc']);
                 if ($url == $locarion_filter) {
                     $location = null; // redirect nashode va code 301 dare. roye https redirect shode.
                 }else{
-                    $location = $arr0['Loc']; // redirect shode roye other domain.
+                    $location = @$arr0['Loc']; // redirect shode roye other domain.
                 }
             }
 
                 // get meta tag description in the sorce url
-            $tags = get_meta_tags('http://'. $url .'/');
+            $tags = @get_meta_tags('http://'. $url .'/');
             if(isset($tags['description'])){
                 $metaDescriptionUrl = $tags['description'];
             }else{

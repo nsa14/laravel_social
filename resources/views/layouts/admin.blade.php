@@ -334,7 +334,7 @@
                         
 
                         <li>
-                            <a href="#"><i class="fa fa-crosshairs"></i> رنک الکسا <span class="fa arrow"></span></a>
+                            <a href="#"><i class="fa fa-crosshairs"></i> اطلاعات دامنه <span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
                                 <a href="{{ route('domain-list') }}"><i class="fa fa-table fa-fw"></i> لیست دامنه ها</a>
