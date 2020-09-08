@@ -4,19 +4,20 @@
 <h1 class="page-header">درج رکورد جدید رنک الکسا </h1>
             <!-- /.row -->
             <div class="row color-dark">
-                <div class="col-lg-4">
+                <div class="col-lg-6">
                     <div class="well">
                         <h4>* رکورد تکراری قابل ثبت نمی باشد  
                             .
-                            <p>* هر ای دی را در یک خط نوشته و حداکثر میتواند تا 20 رکورد را واکشی نماید و زمان تقریبی هر رکورد 
-                                1 ثانیه می باشد.
+                            <p>* هر دامنه را در یک خط نوشته و حداکثر میتواند تا 20 رکورد را واکشی نماید و زمان تقریبی هر رکورد 
+                                2 ثانیه می باشد.
                             </p>
+                            <p>اطلاعات دریافتی شامل : رنک، تاریخ انقضا دامنه، عنوان سایت، وضعیت ریدایرکت و کدوضعیت سایت می باشد</p>
                         </h4>
                         <p>
                             <form role="form" action="{{ route('alexa-insert') }}" id="form-alexa" method="POST">
                                 @csrf
                                 <div class="form-group input-group">
-                                    <span class="input-group-addon">http://</span>
+                                    <span class="input-group-addon">:for ex<br>yjc.ir<br>irib.ir</span>
                                     <textarea name="userName" class="form-control" placeholder="Username" rows="6" cols="10">
                                     </textarea>
                                 </div>
@@ -62,7 +63,7 @@
             // $('#img').hide();
             // $('#img').add(this).toggleClass('hidden');
             $("#img").hide();
-            $("#form").submit(function (e) {
+            $("#form-alexa").submit(function (e) {
                 $('#img').show().slow();
             $("#btn-submit").attr("disabled", true);
             // $('#img').add(this).toggleClass('show');

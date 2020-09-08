@@ -848,6 +848,7 @@ class AdminController extends Controller
                 $domainTable->redirect_to = $value['location'];
                 $domainTable->status_code = $value['statuscode'];
                 $domainTable->title =  $value['metaDescriptionUrl'];
+                $domainTable->expertion_date = $value['expireDate'];
 
                 $domainTable->save();
                 array_push($updatedDomain, $value['name']);
@@ -862,7 +863,7 @@ class AdminController extends Controller
                 $domainTable->localrank = $value['ranklocal'][0];
                 $domainTable->title =  $value['metaDescriptionUrl'];
                 // $domainTable->howis = 
-                // $domainTable->expertion_date = 
+                $domainTable->expertion_date = $value['expireDate'];
                 // $domainTable->redirect = 
                 $domainTable->redirect_to = $value['location'];
                 $domainTable->status_code = $value['statuscode'];
@@ -892,7 +893,7 @@ class AdminController extends Controller
 
         $result = array();
         $arr0 = array();
-        global $ranklocal, $rankglobal, $metaDescriptionUrl;
+        global $ranklocal, $rankglobal, $metaDescriptionUrl, $expireDate;
 
         foreach ($urls as $i => $url){
 
@@ -956,6 +957,7 @@ class AdminController extends Controller
                 }
             }
 
+                // get meta tag description in the sorce url
             $tags = get_meta_tags('http://'. $url .'/');
             if(isset($tags['description'])){
                 $metaDescriptionUrl = $tags['description'];
@@ -963,8 +965,24 @@ class AdminController extends Controller
                 $metaDescriptionUrl = null;
             }
 
+                // get expire date domain from howis request
+            $dataHowis = json_decode(@file_get_contents('https://www.namecheap.com/domains/contactlookup-api/whois/lookupraw/'.$url), 1);
+            $suffixUrl = explode('.', $url);
+            if ($suffixUrl[1] == 'ir') {
+                preg_match('/(?<=expire-date:).*?(?=source)/', str_replace("\n","",$dataHowis), $matches);
+            }elseif($suffixUrl[1] == 'com' || 'net'){
+                preg_match('/(?<=Expiration Date:).*?(?=Registrar:)/', str_replace("\n","",$dataHowis), $matches);
+            }
+            
+            // var_dump($matches);
+            if(isset($matches)){
+                $expireDate = isset($matches[0])? $matches[0]: null;
+            }else{
+                $expireDate = null;
+            }
 
-            $arr = Arr::add(['name' => $url, 'ranklocal' => $ranklocal, 'rankglobal' => $rankglobal, 'location' => $location, 'metaDescriptionUrl' => $metaDescriptionUrl], 'statuscode', $headerCode);
+
+            $arr = Arr::add(['name' => $url, 'ranklocal' => $ranklocal, 'rankglobal' => $rankglobal, 'location' => $location, 'metaDescriptionUrl' => $metaDescriptionUrl, 'expireDate' => $expireDate], 'statuscode', $headerCode);
             $result[$i] = $arr;
         }
   
