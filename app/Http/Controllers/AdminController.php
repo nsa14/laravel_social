@@ -1026,8 +1026,9 @@ class AdminController extends Controller
         $domainTableTodayDate = domains::where('updated_at', '<', date("Y-m-d"))->get();
         // $instagramLists = instagrams::whereDate('updated_at', '<', date("Y-m-d"))->get();
 
+        // return $domainTableTodayDate;
 
-        return $domainTableTodayDate;
+        // چک کردن توسط زمان بندی انجام میششود هر دقیقه و گر رکوردی دیگر برای امروز یافت نشد زمان بندی تمام شود و یا استاپ شود.
 
         // $arrayList = $request->userName;
         // $updatedDomain = array();
