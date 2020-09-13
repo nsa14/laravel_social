@@ -422,6 +422,9 @@ class AdminController extends Controller
         $splitedArray = array_map('trim',array_filter(explode("\n",$arrayList)));
 
         $getResult = $this->get_https_content_likeeArray($splitedArray);
+
+        return $getResult;
+
         $insertedUserName = array();
         $updatedUserName = array();
 
@@ -514,8 +517,7 @@ class AdminController extends Controller
 
 
 
-    public function likee()
-    {
+    public function likee(){
         // $aaa = $this->get_https_content_likee();
 
         print_r($aaa);
@@ -586,7 +588,7 @@ class AdminController extends Controller
         return view('admin.likee-list', compact('likeeLists'));
     }
 
-
+    // not user dynamically.
     public function get_https_content_likee($url=NULL){
 
         $urls = array();
@@ -686,7 +688,6 @@ class AdminController extends Controller
     }
 
     public function get_https_content_likeeArray($urls){
-
         
         // array of curl handles
         $multiCurl = array();
@@ -721,6 +722,8 @@ class AdminController extends Controller
           $result[$k] = curl_multi_getcontent($ch);
         
           preg_match("'userinfo\":(.*?),\"userinfoJson'si", $result[$k], $match);
+
+        //   dd($result[$k]);
         
                 if($match){
         
@@ -775,6 +778,9 @@ class AdminController extends Controller
         
         
     }    
+
+
+
 
 
 
@@ -891,113 +897,113 @@ class AdminController extends Controller
    }
 
    public function get_alexa_checkRank($urls){
-
-        $result = array();
-        $arr0 = array();
-        global $ranklocal, $rankglobal, $metaDescriptionUrl, $expireDate;
-
-        foreach ($urls as $i => $url){
-
-            $xml = @simplexml_load_file("http://data.alexa.com/data?cli=10&url=".$url);
-            // $get_headers = @get_headers('http://'.$url, 1);
-            $responsCode = $this->getHttpResponsCode($url);
-            // dd( $responsCode);
-            
-            $a = explode("\r\n", $responsCode);
+            $result = array();
             $arr0 = array();
-            foreach ($a as $kk){
-                $sp = explode(": ", $kk);
-                // $arr0[$sp[0]] = $sp[1];
-                $ss = substr($sp[0], 0, 3);
-                $arr0[$ss] = isset($sp[1])? $sp[1] : $sp[0];
-        
-            }            
+            global $ranklocal, $rankglobal, $metaDescriptionUrl, $expireDate;
 
-            // return $arr0;
-    
-            if(isset($xml->SD)){
-                //echo 'ALEXA RankGlobal : '.$xml->SD->REACH->attributes().'<br>';
-                //echo 'ALEXA IranRank : '.$xml->SD->COUNTRY[0]['RANK'].'<br>'; 
-                
-                //   $arr = [
-                //     'name' => $url,
-                //     'local' => isset($xml->SD->POPULARITY[0]['TEXT'])? $xml->SD->POPULARITY[0]['TEXT'] : 'not',
-                //     'global' => isset($xml->SD->COUNTRY[0]['RANK'])? $xml->SD->COUNTRY[0]['RANK'] : 'not',
-                // ];
+                foreach ($urls as $i => $url){
 
-                    // $arr = array('name' => $url);
-                    // $arr = array_add($arr, 'rankgglobal', isset($xml->SD->POPULARITY[0]['TEXT'])? $xml->SD->POPULARITY[0]['TEXT'] : 'not');
-                    // $arr = array_add($arr, 'rankglobal', isset($xml->SD->COUNTRY[0]['RANK'])? $xml->SD->COUNTRY[0]['RANK'] : 'not');
-                    $rankglobal = isset($xml->SD->POPULARITY[0]['TEXT'])? $xml->SD->POPULARITY[0]['TEXT'] : 'not';
-                    $ranklocal = isset($xml->SD->COUNTRY[0]['RANK'])? $xml->SD->COUNTRY[0]['RANK'] : 'not';
-
-                    // $headerCode = isset($get_headers[0])? $get_headers[0] : 'not';
-                    // $location = isset($get_headers['Location'])? $get_headers['Location'] : 'not';
-                    // $result = parse_url($location);
-                    // $location = ($result['host'] == $url)? $get_headers['Location'] : 'ok';                    
-
-                    // $arr = Arr::add(['name' => $url, 'ranklocal' => $ranklocal, 'rankglobal' => $rankglobal, 'location' => $location], 'statuscode', $headerCode);
+                    $xml = @simplexml_load_file("http://data.alexa.com/data?cli=10&url=".$url);
+                    // $get_headers = @get_headers('http://'.$url, 1);
+                    $responsCode = $this->getHttpResponsCode($url);
+                    // dd( $responsCode);
                     
+                    $a = explode("\r\n", $responsCode);
+                    $arr0 = array();
+                    foreach ($a as $kk){
+                        $sp = explode(": ", $kk);
+                        // $arr0[$sp[0]] = $sp[1];
+                        $ss = substr($sp[0], 0, 3);
+                        $arr0[$ss] = isset($sp[1])? $sp[1] : $sp[0];
                 
-                    // $arr = array();
-                    // $arr['name'] = $url;
-                    // $arr['rankglobal'] = isset($xml->SD->POPULARITY[0]['TEXT'])? $xml->SD->POPULARITY[0]['TEXT'] : 'not';
-                    // $arr['ranklocal'] = isset($xml->SD->COUNTRY[0]['RANK'])? $xml->SD->COUNTRY[0]['RANK'] : 'not';
+                    }            
+
+                    // return $arr0;
             
-                                
-            }
+                    if(isset($xml->SD)){
+                        //echo 'ALEXA RankGlobal : '.$xml->SD->REACH->attributes().'<br>';
+                        //echo 'ALEXA IranRank : '.$xml->SD->COUNTRY[0]['RANK'].'<br>'; 
+                        
+                        //   $arr = [
+                        //     'name' => $url,
+                        //     'local' => isset($xml->SD->POPULARITY[0]['TEXT'])? $xml->SD->POPULARITY[0]['TEXT'] : 'not',
+                        //     'global' => isset($xml->SD->COUNTRY[0]['RANK'])? $xml->SD->COUNTRY[0]['RANK'] : 'not',
+                        // ];
 
-            if (isset($arr0)) {
+                            // $arr = array('name' => $url);
+                            // $arr = array_add($arr, 'rankgglobal', isset($xml->SD->POPULARITY[0]['TEXT'])? $xml->SD->POPULARITY[0]['TEXT'] : 'not');
+                            // $arr = array_add($arr, 'rankglobal', isset($xml->SD->COUNTRY[0]['RANK'])? $xml->SD->COUNTRY[0]['RANK'] : 'not');
+                            $rankglobal = isset($xml->SD->POPULARITY[0]['TEXT'])? $xml->SD->POPULARITY[0]['TEXT'] : 'not';
+                            $ranklocal = isset($xml->SD->COUNTRY[0]['RANK'])? $xml->SD->COUNTRY[0]['RANK'] : 'not';
 
-                $headerCode = @$arr0['HTT'];
-                $locarion_filter = str_replace(array('http://','https://','www.', '/'), '', @$arr0['Loc']);
-                if ($url == $locarion_filter) {
-                    $location = null; // redirect nashode va code 301 dare. roye https redirect shode.
-                }else{
-                    $location = @$arr0['Loc']; // redirect shode roye other domain.
+                            // $headerCode = isset($get_headers[0])? $get_headers[0] : 'not';
+                            // $location = isset($get_headers['Location'])? $get_headers['Location'] : 'not';
+                            // $result = parse_url($location);
+                            // $location = ($result['host'] == $url)? $get_headers['Location'] : 'ok';                    
+
+                            // $arr = Arr::add(['name' => $url, 'ranklocal' => $ranklocal, 'rankglobal' => $rankglobal, 'location' => $location], 'statuscode', $headerCode);
+                            
+                        
+                            // $arr = array();
+                            // $arr['name'] = $url;
+                            // $arr['rankglobal'] = isset($xml->SD->POPULARITY[0]['TEXT'])? $xml->SD->POPULARITY[0]['TEXT'] : 'not';
+                            // $arr['ranklocal'] = isset($xml->SD->COUNTRY[0]['RANK'])? $xml->SD->COUNTRY[0]['RANK'] : 'not';
+                    
+                                        
+                    }
+
+                    if (isset($arr0)) {
+
+                        $headerCode = @$arr0['HTT'];
+                        $locarion_filter = str_replace(array('http://','https://','www.', '/'), '', @$arr0['Loc']);
+                        if ($url == $locarion_filter) {
+                            $location = null; // redirect nashode va code 301 dare. roye https redirect shode.
+                        }else{
+                            $location = @$arr0['Loc']; // redirect shode roye other domain.
+                        }
+                    }
+
+                        // get meta tag description in the sorce url
+                    $tags = @get_meta_tags('http://'. $url .'/');
+                    if(isset($tags['description'])){
+                        $metaDescriptionUrl = $tags['description'];
+                    }else{
+                        $metaDescriptionUrl = null;
+                    }
+
+                        // get expire date domain from howis request
+                    $dataHowis = json_decode(@file_get_contents('https://www.namecheap.com/domains/contactlookup-api/whois/lookupraw/'.$url), 1);
+                    $suffixUrl = explode('.', $url);
+                    if ($suffixUrl[1] == 'ir') {
+                        preg_match('/(?<=expire-date:).*?(?=source)/', str_replace("\n","",$dataHowis), $matches);
+                    }elseif($suffixUrl[1] == 'com' || 'net'){
+                        preg_match('/(?<=Expiration Date:).*?(?=Registrar:)/', str_replace("\n","",$dataHowis), $matches);
+                    }
+                    
+                    // var_dump($matches);
+                    if(isset($matches)){
+                        $expireDate = isset($matches[0])? $matches[0]: null;
+                    }else{
+                        $expireDate = null;
+                    }
+
+
+                    $arr = Arr::add(['name' => $url, 'ranklocal' => $ranklocal, 'rankglobal' => $rankglobal, 'location' => $location, 'metaDescriptionUrl' => $metaDescriptionUrl, 'expireDate' => $expireDate], 'statuscode', $headerCode);
+                    $result[$i] = $arr;
                 }
-            }
-
-                // get meta tag description in the sorce url
-            $tags = @get_meta_tags('http://'. $url .'/');
-            if(isset($tags['description'])){
-                $metaDescriptionUrl = $tags['description'];
-            }else{
-                $metaDescriptionUrl = null;
-            }
-
-                // get expire date domain from howis request
-            $dataHowis = json_decode(@file_get_contents('https://www.namecheap.com/domains/contactlookup-api/whois/lookupraw/'.$url), 1);
-            $suffixUrl = explode('.', $url);
-            if ($suffixUrl[1] == 'ir') {
-                preg_match('/(?<=expire-date:).*?(?=source)/', str_replace("\n","",$dataHowis), $matches);
-            }elseif($suffixUrl[1] == 'com' || 'net'){
-                preg_match('/(?<=Expiration Date:).*?(?=Registrar:)/', str_replace("\n","",$dataHowis), $matches);
-            }
-            
-            // var_dump($matches);
-            if(isset($matches)){
-                $expireDate = isset($matches[0])? $matches[0]: null;
-            }else{
-                $expireDate = null;
-            }
-
-
-            $arr = Arr::add(['name' => $url, 'ranklocal' => $ranklocal, 'rankglobal' => $rankglobal, 'location' => $location, 'metaDescriptionUrl' => $metaDescriptionUrl, 'expireDate' => $expireDate], 'statuscode', $headerCode);
-            $result[$i] = $arr;
-        }
   
-      return $result;
-
+        return $result;
     }
 
-   public function domainList(){
-
-    $allDomains = domains::get();
-
-    return view('admin.domain-list',compact('allDomains'));
 
 
+
+
+   
+    public function domainList(){
+
+        $allDomains = domains::get();
+        return view('admin.domain-list',compact('allDomains'));
    }
 
    public function getHttpResponsCode($url){
@@ -1014,6 +1020,98 @@ class AdminController extends Controller
 
         
 
+   }
+
+   public function alexaCheckBatchWithSchedule(){
+        $domainTableTodayDate = domains::where('updated_at', '<', date("Y-m-d"))->get();
+        // $instagramLists = instagrams::whereDate('updated_at', '<', date("Y-m-d"))->get();
+
+
+        return $domainTableTodayDate;
+
+        // $arrayList = $request->userName;
+        // $updatedDomain = array();
+        // $insertedDomain = array();
+        // // yjc.ir
+        // // iribcs.ir
+        // $splitedArray = array_map('trim',array_filter(explode("\n",$arrayList)));
+
+        // if (count($splitedArray) > 20) {
+        //     Session::flash('message', " تعداد اطلاعات مورد بررسی :  ". count($splitedArray)." <br>
+        //     علت خطا : تعداد بیشتر از حد مجاز دامنه برای واکشی<br>"
+        //     );
+        //     Session::flash('alert-class', 'alert-danger'); 
+        //     return redirect()->back();
+        // }
+
+        // $getResult = $this->get_alexa_checkRank($splitedArray);
+
+        // // return $getResult;
+
+        // //[{"name":"naser-zare.ir","ranklocal":null,"rankglobal":null,
+        // //"location":"http:\/\/naser-zare.ir\/cgi-sys\/suspendedpage.cgi","statuscode":"HTTP\/1.1 302 Found"}]
+
+        // foreach ($getResult as $key => $value) {       
+
+        //     // dd($value);            
+
+        //     // echo $value['name'].$value['ranklocal'][0].'<br>';
+
+        //     $domainTable = new domains;
+
+        //     $host = explode('.', $value['name']); // explade yjc . ir
+
+        //     if (domains::where('url', '=', $host[0])->exists()) {
+        //         // domain found ... then updated record
+        //         $rowId = domains::where('url', '=',  $host[0])->first();
+        //         // return $rowId;
+        //         // exit();
+
+        //         // $domainTable = new likee;
+
+        //         $domainTable = domains::find($rowId->id);
+
+        //         $domainTable->globalrank = $value['rankglobal'][0];
+        //         $domainTable->localrank = $value['ranklocal'][0];
+        //         $domainTable->redirect_to = $value['location'];
+        //         $domainTable->status_code = $value['statuscode'];
+        //         $domainTable->title =  $value['metaDescriptionUrl'];
+        //         $domainTable->expertion_date = $value['expireDate'];
+
+        //         $domainTable->save();
+        //         array_push($updatedDomain, $value['name']);
+
+        //     }else{
+
+        //         // $host = explode('.', $value['name']);
+
+        //         $domainTable->url = $host[0];
+        //         $domainTable->dot = $host[1];
+        //         $domainTable->globalrank = $value['rankglobal'][0];
+        //         $domainTable->localrank = $value['ranklocal'][0];
+        //         $domainTable->title =  $value['metaDescriptionUrl'];
+        //         // $domainTable->howis = 
+        //         $domainTable->expertion_date = $value['expireDate'];
+        //         // $domainTable->redirect = 
+        //         $domainTable->redirect_to = $value['location'];
+        //         $domainTable->status_code = $value['statuscode'];
+        //         // $domainTable->description = 
+
+        //         $domainTable->save();
+                
+        //         array_push($insertedDomain, $value['name']);
+                
+        //     }           
+        // }
+
+
+        // Session::flash('message', " تعداد اطلاعات مورد بررسی :  ". count($getResult)." <br>
+        // رکوردهای بروزرسانی : ".implode( ", ", $updatedDomain )."<br>
+        // رکوردهای جدید : ".implode( ", ", $insertedDomain )."<br>
+        // "); 
+
+        // Session::flash('alert-class', 'alert-success'); 
+        // return redirect()->back();       
    }
 
 

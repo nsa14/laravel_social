@@ -15,6 +15,8 @@
 //npm intsall
 //npm run dev
 
+//php artisan storage:link
+
 
 //php artisan make:model Instagram -m
 
@@ -116,6 +118,18 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'domain-list', 
         'uses' => 'AdminController@domainList'
     ]);    
+
+
+
+
+
+
+
+    Route::get('/al', [
+        'as' => 'al', 
+        'uses' => 'AdminController@alexaCheckBatchWithSchedule'
+    ]); 
+    
     
 
 });
