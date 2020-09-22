@@ -21,6 +21,9 @@
 //php artisan make:model Instagram -m
 
 
+//php artisan schedule:run
+
+
 
 use Illuminate\Support\Facades\Route;
 
@@ -120,7 +123,14 @@ Route::group(['middleware' => ['auth']], function () {
     ]);    
 
 
-
+    Route::get('/authority', [
+        'as' => 'authority', 
+        'uses' => 'AdminController@authority'
+    ]);
+    Route::post('/authority-checker', [
+        'as' => 'authority-checker', 
+        'uses' => 'AdminController@authorityChecker'
+    ]);
 
 
 

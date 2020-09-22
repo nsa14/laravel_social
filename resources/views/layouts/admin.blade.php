@@ -337,10 +337,13 @@
                             <a href="#"><i class="fa fa-crosshairs"></i> اطلاعات دامنه <span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
-                                <a href="{{ route('domain-list') }}"><i class="fa fa-table fa-fw"></i> لیست دامنه ها</a>
+                                    <a href="{{ route('domain-list') }}"><i class="fa fa-table fa-fw"></i> لیست دامنه ها</a>
                                 </li>
                                 <li>
-                                <a href="{{ route('alexa-check-show') }}"><i class="fa fa-table fa-fw"></i> رکورد جدید </a>
+                                    <a href="{{ route('alexa-check-show') }}"><i class="fa fa-table fa-fw"></i> رکورد جدید </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('authority') }}"><i class="fa fa-table fa-fw"></i>authority رکورد جدید </a>
                                 </li>
                                 {{-- <li>
                                     <a href=""><i class="fa fa-table fa-fw"></i> بروزرسانی لیست </a>

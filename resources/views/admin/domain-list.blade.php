@@ -10,6 +10,19 @@
                             لیست کلیه دامنه های ثبت شده در سامانه
                             <?php
 
+                                        // try{
+
+                                        //     $header_check = get_headers("http://www.aboatashtv.ir", false);
+                                        //     $response_code = $header_check[0];
+                                        //     echo $response_code;
+
+                                        // }catch(Exception $err){
+                                        //     echo $err->getMessage();
+                                        // }
+
+
+                                                       
+
                                     // $data = json_decode(file_get_contents('https://www.namecheap.com/domains/contactlookup-api/whois/lookupraw/pooyatv.net'), 1);
                                     // // $data = " on http://www.nic.ir/ % % This server uses UTF-8 as the encoding for requests and responses. % NOTE: This output has been filtered. % Information related to 'irib.ir' domain: irib.ir ascii: irib.ir remarks: (Domain Holder) islamic republic of iran broadcasting remarks: (Domain Holder Address) Department Of IT-IRIB- P.O Box 19395-3333 Jaame Jam.St-Valiasr Ave-Tehran-Iran, tehran, tehran, IR holder-c: is547-irnic admin-c: is547-irnic tech-c: is547-irnic nserver: ns1.irib.ir nserver: ns2.irib.ir nserver: ns3.irib.ir last-updated: 2020-06-29 expire-date: 2021-07-07 source: IRNIC # Filtered nic-hdl: is547-irnic org: islamic republic of iran broadcasting e-mail: nic@irib.ir address: Department Of IT-IRIB- P.O Box 19395-3333 Jaame Jam.St-Valiasr Ave-Tehran-Iran, tehran, tehran, IR phone: +98 21 22164961 fax-no: +98 21 22164962 source: IRNIC # Filtered";
                                     // // preg_match('/(?<=expire-date:).*?(?=source)/', str_replace("\n","",$data), $matches);

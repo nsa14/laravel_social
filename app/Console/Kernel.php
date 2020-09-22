@@ -4,6 +4,7 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use DateTime;
 
 class Kernel extends ConsoleKernel
 {
@@ -24,9 +25,12 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        // $folderName = public_path('exports');
         // $schedule->command('inspire')->hourly();
-        // $schedule->call('\App\Http\Controllers\HomeController@petsOfDay')->daily();
-
+        $schedule->call('\App\Http\Controllers\AdminController@alexaCheckBatchWithSchedule');
+        // ->everyMinute();
+        // ->sendOutputTo(storage_path('logs/222'.date('m-d-Y_H:i:s').'.log'));
+        //Alternatively, you may use var_dump() to view the results in your terminal.
     }
 
     /**

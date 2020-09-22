@@ -901,8 +901,10 @@ class AdminController extends Controller
             $arr0 = array();
             global $ranklocal, $rankglobal, $metaDescriptionUrl, $expireDate;
 
-                foreach ($urls as $i => $url){
+            foreach ($urls as $i => $url){
 
+                if($socket =@ fsockopen($url, 80, $errno, $errstr, 3)) {
+                    // echo 'online!';
                     $xml = @simplexml_load_file("http://data.alexa.com/data?cli=10&url=".$url);
                     // $get_headers = @get_headers('http://'.$url, 1);
                     $responsCode = $this->getHttpResponsCode($url);
@@ -987,10 +989,26 @@ class AdminController extends Controller
                         $expireDate = null;
                     }
 
-
                     $arr = Arr::add(['name' => $url, 'ranklocal' => $ranklocal, 'rankglobal' => $rankglobal, 'location' => $location, 'metaDescriptionUrl' => $metaDescriptionUrl, 'expireDate' => $expireDate], 'statuscode', $headerCode);
                     $result[$i] = $arr;
-                }
+
+                
+
+                fclose($socket);
+                
+                } else {
+                    //echo 'offline.';
+                    $arr = Arr::add(['name' => $url, 'ranklocal' => null, 'rankglobal' => null, 'location' => null, 'metaDescriptionUrl' => null, 'expireDate' => null], 'statuscode', 'Server Down');
+                    $result[$i] = $arr;
+                    
+                } //end if
+
+            }//end foreach
+
+            
+            // http://data.alexa.com/data?cli=10&url=aboatashtv.ir
+
+                
   
         return $result;
     }
@@ -1023,7 +1041,8 @@ class AdminController extends Controller
    }
 
    public function alexaCheckBatchWithSchedule(){
-        $domainTableTodayDate = domains::where('updated_at', '<', date("Y-m-d"))->get();
+        $domainTableTodayDate = domains::where('updated_at', '<', date("Y-m-d"))->inRandomOrder()->take(2)->get(['url','dot']);
+        // $domainTableTodayDate = domains::where('id', '=', 8)->get();
         // $instagramLists = instagrams::whereDate('updated_at', '<', date("Y-m-d"))->get();
 
         // return $domainTableTodayDate;
@@ -1031,80 +1050,66 @@ class AdminController extends Controller
         // چک کردن توسط زمان بندی انجام میششود هر دقیقه و گر رکوردی دیگر برای امروز یافت نشد زمان بندی تمام شود و یا استاپ شود.
 
         // $arrayList = $request->userName;
-        // $updatedDomain = array();
-        // $insertedDomain = array();
-        // // yjc.ir
-        // // iribcs.ir
-        // $splitedArray = array_map('trim',array_filter(explode("\n",$arrayList)));
+        $updatedDomain = array();
+        $insertedDomain = array();
+        $splitedArray = array();
+        // yjc.ir
+        // iribcs.ir
 
-        // if (count($splitedArray) > 20) {
-        //     Session::flash('message', " تعداد اطلاعات مورد بررسی :  ". count($splitedArray)." <br>
-        //     علت خطا : تعداد بیشتر از حد مجاز دامنه برای واکشی<br>"
-        //     );
-        //     Session::flash('alert-class', 'alert-danger'); 
-        //     return redirect()->back();
-        // }
+        foreach ($domainTableTodayDate as $val){
+            $splitedArray[] = $val->url.'.'.$val->dot;
+        }
+        // var_dump($splitedArray);
+        // return $splitedArray;
+        // echo $splitedArray;
 
-        // $getResult = $this->get_alexa_checkRank($splitedArray);
+        // return $splitedArray;
 
-        // // return $getResult;
+        $getResult = $this->get_alexa_checkRank($splitedArray);
 
-        // //[{"name":"naser-zare.ir","ranklocal":null,"rankglobal":null,
-        // //"location":"http:\/\/naser-zare.ir\/cgi-sys\/suspendedpage.cgi","statuscode":"HTTP\/1.1 302 Found"}]
+        // return $getResult;
 
-        // foreach ($getResult as $key => $value) {       
+        file_put_contents(storage_path('logs/_domain/Schedule_domain'.date('m-d-Y_hia').'.log'), print_r($getResult, true));
 
-        //     // dd($value);            
+        // dd($getResult);
 
-        //     // echo $value['name'].$value['ranklocal'][0].'<br>';
+        //[{"name":"naser-zare.ir","ranklocal":null,"rankglobal":null,
+        //"location":"http:\/\/naser-zare.ir\/cgi-sys\/suspendedpage.cgi","statuscode":"HTTP\/1.1 302 Found"}]
 
-        //     $domainTable = new domains;
+        foreach ($getResult as $key => $value) {
 
-        //     $host = explode('.', $value['name']); // explade yjc . ir
+            // dd($value);
 
-        //     if (domains::where('url', '=', $host[0])->exists()) {
-        //         // domain found ... then updated record
-        //         $rowId = domains::where('url', '=',  $host[0])->first();
-        //         // return $rowId;
-        //         // exit();
+            // echo $value['name'].$value['ranklocal'][0].'<br>';
 
-        //         // $domainTable = new likee;
+            
 
-        //         $domainTable = domains::find($rowId->id);
+            $host = explode('.', $value['name']); // explode yjc . ir
 
-        //         $domainTable->globalrank = $value['rankglobal'][0];
-        //         $domainTable->localrank = $value['ranklocal'][0];
-        //         $domainTable->redirect_to = $value['location'];
-        //         $domainTable->status_code = $value['statuscode'];
-        //         $domainTable->title =  $value['metaDescriptionUrl'];
-        //         $domainTable->expertion_date = $value['expireDate'];
+            if (domains::where('url', '=', $host[0])->exists()) {
+                // domain found ... then updated record
+                $rowId = domains::where('url', '=',  $host[0])->first();
+                // return $rowId;
+                // exit();
 
-        //         $domainTable->save();
-        //         array_push($updatedDomain, $value['name']);
+                $domainTable = new domains;
 
-        //     }else{
+                $domainTable = domains::find($rowId->id);
 
-        //         // $host = explode('.', $value['name']);
+                $domainTable->globalrank = $value['rankglobal'][0];
+                $domainTable->localrank = $value['ranklocal'][0];
+                $domainTable->redirect_to = $value['location'];
+                $domainTable->status_code = $value['statuscode'];
+                $domainTable->title =  $value['metaDescriptionUrl'];
+                $domainTable->expertion_date = $value['expireDate'];
 
-        //         $domainTable->url = $host[0];
-        //         $domainTable->dot = $host[1];
-        //         $domainTable->globalrank = $value['rankglobal'][0];
-        //         $domainTable->localrank = $value['ranklocal'][0];
-        //         $domainTable->title =  $value['metaDescriptionUrl'];
-        //         // $domainTable->howis = 
-        //         $domainTable->expertion_date = $value['expireDate'];
-        //         // $domainTable->redirect = 
-        //         $domainTable->redirect_to = $value['location'];
-        //         $domainTable->status_code = $value['statuscode'];
-        //         // $domainTable->description = 
+                $domainTable->save();
+                array_push($updatedDomain, $value['name']);
 
-        //         $domainTable->save();
-                
-        //         array_push($insertedDomain, $value['name']);
-                
-        //     }           
-        // }
+            }      
+        }
 
+        return $updatedDomain;
 
         // Session::flash('message', " تعداد اطلاعات مورد بررسی :  ". count($getResult)." <br>
         // رکوردهای بروزرسانی : ".implode( ", ", $updatedDomain )."<br>
@@ -1113,6 +1118,120 @@ class AdminController extends Controller
 
         // Session::flash('alert-class', 'alert-success'); 
         // return redirect()->back();       
+   }
+
+   public function authority(){
+        return view('admin.authority-add');
+   }
+
+
+   public function authorityChecker(Request $request){
+        //    return 'ok';
+        $arrayList = $request->userName;
+        $updated = array();
+        $inserted = array();
+        // yjc.ir
+        // iribcs.ir
+
+        $splitedArray = array_map('trim',array_filter(explode("\n",$arrayList)));
+
+        $getResult = $this->get_domain_authority($splitedArray);
+
+        dd($getResult);
+
+        // $countStatusSuccessed = count(array_filter($getResult,function($element) {
+        //     return $element['status']=='200';
+        //   }));
+
+        // $countStatusFailed = count(array_filter($getResult,function($element) {
+        //     return $element['status']=='403';
+        // }));
+
+        return $getResult;
+
+        // foreach ($getResult as $kk){
+
+        // }
+   }
+
+   public function get_domain_authority($urls){
+        $result = array();
+        $dataDA = array();
+        
+        $arr = array();
+        global $countStatusSuccessed, $countStatusFailed;
+
+        $countStatusSuccessed = 0;
+        $countStatusFailed = 0;
+
+        //Create a custom stream context that has a HTTP timeout
+        //of 3 seconds.
+        $streamContext = stream_context_create(
+            array('http'=>
+                array(
+                    'timeout' => 3,  //3 seconds
+                )
+            )
+        );
+
+        $t = microtime( TRUE );
+        
+        foreach ($urls as $i => $url){
+        
+            // get expire date domain from howis request
+            if($socket =@ fsockopen($url, 80, $errno, $errstr, 3)) {
+                
+                $dataDA = json_decode(@file_get_contents('https://prod.sureoakdata.com/api/v1/domain-authority-checker?websiteUrl='.$url, false, $streamContext),true);
+                if($dataDA === FALSE) {
+                    // print "Site down"; // or other problem
+                    // $dataDA = array();
+                    $dataDA['status'] = '403';
+                    $dataDA['domainAuthority'] = 'null';
+                    $dataDA['externalEquityLinks'] = 'null';
+                    $dataDA['prettyExternalEquityLinks'] = 'null';
+                    $dataDA['pageAuthority'] = 'null';
+                    $dataDA = json_decode(json_encode($dataDA));
+                } else {
+                    // $t = microtime( TRUE ) - $t;
+                    // print "It took $t seconds!";
+                    $dataDA['status'] = '200';
+                    // array_push($dataDA['status'], "403");
+                    // $dataDA = array_push($dataDA, $dataDA['status'] = "403");
+                    // $dataDA += (string)['status' => "403"];
+                    $dataDA = json_decode(json_encode($dataDA));
+                }
+
+                fclose($socket);
+            } 
+            else 
+            {   
+                $dataDA = array();
+                $dataDA['status'] = '403';
+                $dataDA['domainAuthority'] = 'null';
+                $dataDA['externalEquityLinks'] = 'null';
+                $dataDA['prettyExternalEquityLinks'] = 'null';
+                $dataDA['pageAuthority'] = 'null';
+
+                $dataDA = json_decode(json_encode($dataDA));
+            } 
+
+            ($dataDA->status=="200"? $countStatusSuccessed++:null);
+            ($dataDA->status=='403'? $countStatusFailed++:null);
+
+            
+
+            // $arr = Arr::add(['data' => $dataDA], 'pageAuthority', 'null');
+            $arr = Arr::add(['status' => $dataDA->status , 'name' => $url, 'DomainAuthority' => $dataDA->domainAuthority, 'externalEquityLinks' => $dataDA->externalEquityLinks, 'prettyExternalEquityLinks' => $dataDA->prettyExternalEquityLinks], 'pageAuthority', $dataDA->pageAuthority);
+            $result[$i] = $arr;
+            // sleep(3); // this should halt for 3 seconds for every loop
+        }
+            $t = microtime( TRUE ) - $t;
+            $result['countStatusSuccessed'] = $countStatusSuccessed;
+            $result['countStatusFailed'] = $countStatusFailed;
+            $result['spentTime'] = $t;
+            // return $dataDA;
+            return $result;
+        
    }
 
 

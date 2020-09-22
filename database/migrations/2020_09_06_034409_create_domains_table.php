@@ -29,6 +29,11 @@ class CreateDomainsTable extends Migration
             $table->text('status_code')->nullable();
             $table->text('description')->nullable();
 
+            $table->text('domainAuthority')->nullable();
+            $table->text('externalEquityLinks')->nullable();
+            $table->text('prettyExternalEquityLinks')->nullable();
+            $table->text('pageAuthority')->nullable();
+
             $table->timestamps();
         });
     }
