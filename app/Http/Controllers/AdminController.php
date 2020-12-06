@@ -818,7 +818,7 @@ class AdminController extends Controller
         if (count($splitedArray) > 20) {
             Session::flash('message', " تعداد اطلاعات مورد بررسی :  ". count($splitedArray)." <br>
             علت خطا : تعداد بیشتر از حد مجاز دامنه برای واکشی<br>"
-            );
+            ); 
             Session::flash('alert-class', 'alert-danger'); 
             return redirect()->back();
         }
@@ -840,9 +840,11 @@ class AdminController extends Controller
 
             $host = explode('.', $value['name']); // explade yjc . ir
 
-            if (domains::where('url', '=', $host[0])->exists()) {
+            // if (domains::where('url', '=', $host[0])->exists()) {
+            if (domains::where('full_url', '=', $value['name'])->exists()) {
                 // domain found ... then updated record
-                $rowId = domains::where('url', '=',  $host[0])->first();
+                // $rowId = domains::where('url', '=',  $host[0])->first();
+                $rowId = domains::where('full_url', '=',  $value['name'])->first();
                 // return $rowId;
                 // exit();
 
@@ -863,7 +865,7 @@ class AdminController extends Controller
             }else{
 
                 // $host = explode('.', $value['name']);
-
+                $domainTable->full_url = $value['name'];
                 $domainTable->url = $host[0];
                 $domainTable->dot = $host[1];
                 $domainTable->globalrank = $value['rankglobal'][0];
@@ -956,9 +958,19 @@ class AdminController extends Controller
 
                     if (isset($arr0)) {
 
-                        $headerCode = @$arr0['HTT'];
-                        $locarion_filter = str_replace(array('http://','https://','www.', '/'), '', @$arr0['Loc']);
-                        if ($url == $locarion_filter) {
+                        $headerCode = (@$arr0['HTT']) ? $arr0['HTT'] : 'Server Down';
+                        // $locarion_filter = str_replace(array('http://','https://','www.', '/'), '', @$arr0['Loc']);
+
+
+
+                        $parse = @parse_url(@$arr0['Loc']);
+                        // return $url .' -> '. $parse['host'];
+
+
+
+
+                        // if ($url == $locarion_filter) {
+                        if ($url == @$parse['host']) {
                             $location = null; // redirect nashode va code 301 dare. roye https redirect shode.
                         }else{
                             $location = @$arr0['Loc']; // redirect shode roye other domain.
@@ -973,6 +985,8 @@ class AdminController extends Controller
                         $metaDescriptionUrl = null;
                     }
 
+                    // $metaDescriptionUrl = null;
+
                         // get expire date domain from howis request
                     $dataHowis = json_decode(@file_get_contents('https://www.namecheap.com/domains/contactlookup-api/whois/lookupraw/'.$url), 1);
                     $suffixUrl = explode('.', $url);
@@ -982,14 +996,17 @@ class AdminController extends Controller
                         preg_match('/(?<=Expiration Date:).*?(?=Registrar:)/', str_replace("\n","",$dataHowis), $matches);
                     }
                     
-                    // var_dump($matches);
+                        // var_dump($matches);
                     if(isset($matches)){
                         $expireDate = isset($matches[0])? $matches[0]: null;
                     }else{
                         $expireDate = null;
                     }
 
+                    // $expireDate = null;
+
                     $arr = Arr::add(['name' => $url, 'ranklocal' => $ranklocal, 'rankglobal' => $rankglobal, 'location' => $location, 'metaDescriptionUrl' => $metaDescriptionUrl, 'expireDate' => $expireDate], 'statuscode', $headerCode);
+                    
                     $result[$i] = $arr;
 
                 
@@ -1104,6 +1121,8 @@ class AdminController extends Controller
                 $domainTable->expertion_date = $value['expireDate'];
 
                 $domainTable->save();
+                // Update the "updated_at" column only
+                $domainTable->touch();
                 array_push($updatedDomain, $value['name']);
 
             }      
@@ -1137,7 +1156,7 @@ class AdminController extends Controller
 
         $getResult = $this->get_domain_authority($splitedArray);
 
-        dd($getResult);
+        // dd($getResult);
 
         // $countStatusSuccessed = count(array_filter($getResult,function($element) {
         //     return $element['status']=='200';
@@ -1178,7 +1197,13 @@ class AdminController extends Controller
         
         foreach ($urls as $i => $url){
         
-            // get expire date domain from howis request
+            // get domain & page authority request
+
+            //  https://api.openrank.io/?key=sdsdsdsd&google.com  free api for rank API
+            //  https://api.openrank.io/?key=rBHOEfwVhh4g7gJhBgV33i/wv7qpdea5uvwyokYI/4Y&d=google.com%7Cbing.com
+
+            //  https://moz.com/domain-analysis?site=iribcs.ir      other free
+
             if($socket =@ fsockopen($url, 80, $errno, $errstr, 3)) {
                 
                 $dataDA = json_decode(@file_get_contents('https://prod.sureoakdata.com/api/v1/domain-authority-checker?websiteUrl='.$url, false, $streamContext),true);
@@ -1223,7 +1248,7 @@ class AdminController extends Controller
             // $arr = Arr::add(['data' => $dataDA], 'pageAuthority', 'null');
             $arr = Arr::add(['status' => $dataDA->status , 'name' => $url, 'DomainAuthority' => $dataDA->domainAuthority, 'externalEquityLinks' => $dataDA->externalEquityLinks, 'prettyExternalEquityLinks' => $dataDA->prettyExternalEquityLinks], 'pageAuthority', $dataDA->pageAuthority);
             $result[$i] = $arr;
-            // sleep(3); // this should halt for 3 seconds for every loop
+            sleep(2); // this should halt for 3 seconds for every loop
         }
             $t = microtime( TRUE ) - $t;
             $result['countStatusSuccessed'] = $countStatusSuccessed;

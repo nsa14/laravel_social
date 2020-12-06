@@ -16,6 +16,7 @@ class CreateDomainsTable extends Migration
         Schema::create('domains', function (Blueprint $table) {
             $table->id();
 
+            $table->text('full_url');
             $table->text('url');
             $table->text('dot');
             $table->text('globalrank')->nullable();
@@ -27,12 +28,13 @@ class CreateDomainsTable extends Migration
             $table->boolean('redirect')->nullable();
             $table->text('redirect_to')->nullable();
             $table->text('status_code')->nullable();
+            // $table->text('server_ud')->nullable();
             $table->text('description')->nullable();
 
-            $table->text('domainAuthority')->nullable();
-            $table->text('externalEquityLinks')->nullable();
-            $table->text('prettyExternalEquityLinks')->nullable();
-            $table->text('pageAuthority')->nullable();
+            // $table->text('domainAuthority')->nullable();
+            // $table->text('externalEquityLinks')->nullable();
+            // $table->text('prettyExternalEquityLinks')->nullable();
+            // $table->text('pageAuthority')->nullable();
 
             $table->timestamps();
         });

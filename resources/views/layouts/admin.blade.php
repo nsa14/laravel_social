@@ -35,6 +35,41 @@
     <!-- Custom Fonts -->
     <link href="{{ asset('css/font-awesome/font-awesome.min.css') }}" rel="stylesheet" type="text/css">
 
+    <!-- WebApp PWA progress create new  -->
+    <link href="{{ asset('manifest.json') }}" rel="manifest">
+    <!-- place this in a head section -->
+    <link rel="apple-touch-icon" href="{{ asset('images/apple-touch-icon.png') }}">
+    <link rel="apple-touch-icon" sizes="152x152" href="{{ asset('images/android-chrome-192x192.png') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('images/android-chrome-192x192.png') }}">
+    <link rel="apple-touch-icon" sizes="167x167" href="{{ asset('images/android-chrome-192x192.png') }}">
+    <!-- place this in a head section -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <link href="{{ asset('images/android-chrome-192x192.png') }}" sizes="2048x2732" rel="apple-touch-startup-image" />
+    <link href="{{ asset('images/android-chrome-192x192.png') }}" sizes="1668x2224" rel="apple-touch-startup-image" />
+    <link href="{{ asset('images/android-chrome-192x192.png') }}" sizes="1536x2048" rel="apple-touch-startup-image" />
+    <link href="{{ asset('images/android-chrome-192x192.png') }}" sizes="1125x2436" rel="apple-touch-startup-image" />
+    <link href="{{ asset('images/android-chrome-192x192.png') }}" sizes="1242x2208" rel="apple-touch-startup-image" />
+    <link href="{{ asset('images/android-chrome-192x192.png') }}" sizes="750x1334" rel="apple-touch-startup-image" />
+    <link href="{{ asset('images/android-chrome-192x192.png') }}" sizes="640x1136" rel="apple-touch-startup-image" />
+
+    <script>
+        if ( 'serviceWorker' in navigator ) {
+               navigator.serviceWorker.register('/sw.js').then(function(registration) {
+                 // Registration was successful
+                 console.log('ServiceWorker registration successful with scope: ', registration.scope);
+               }).catch(function(err) {
+                 // registration failed :(
+                 console.log('ServiceWorker registration failed: ', err);
+               });
+       
+               if (!navigator.serviceWorker.controller) {
+                 navigator.serviceWorker.register("{{ asset('sw.js') }}").then(function(reg) {
+                   console.log("Service worker registered for {" + reg.scope + "} scope");
+                 });
+               }
+    </script>
+             
+             
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -734,6 +769,10 @@ function fauxClick(x, y) {
         
         
 
+
+
+      
+      
 </body>
 
 </html>
