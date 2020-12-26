@@ -74,6 +74,7 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'AdminController@instagramUpdating'
     ]);
     
+    //original is post method
     Route::post('/instagram-updatingProcess', [
         'as' => 'instagram-updatingProcess', 
         'uses' => 'AdminController@instagramUpdatingProcess'
@@ -132,6 +133,54 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'AdminController@authorityChecker'
     ]);
 
+    Route::get('/moz-authority', [
+        'as' => 'moz-authority', 
+        'uses' => 'AdminController@mozAuthority'
+    ]); 
+
+
+    Route::get('/sapp-insert-show', [
+        'as' => 'sapp-insert-show', 
+        'uses' => 'AdminController@sappInsertShow'
+    ]);
+
+    Route::post('/sapp-get-insert', [
+        'as' => 'sapp-get-insert', 
+        'uses' => 'AdminController@sapp_get_insert'
+    ]); 
+
+
+
+
+
+    //==============
+    Route::get('/test-javad', [
+        'as' => 'test-javad', 
+        'uses' => 'AdminController@testJavad'
+    ]); 
+
+ //============== test sorosh get channel count member
+ Route::get('/test-sapp', [
+    'as' => 'test-sapp', 
+    'uses' => 'AdminController@get_sapp_data'
+]); 
+    
+
+
+
+
+    //-----------------  instagram oreizi
+    Route::get('/instagram-oreizi', [
+        'as' => 'instagram-oreizi', 
+        'uses' => 'AdminController@instagramOreizi'
+    ]); 
+
+    Route::get('/instagramOreiziAutomaticly', [
+        'as' => 'instagramOreiziAutomaticly', 
+        'uses' => 'AdminController@instagramOreiziAutomaticly'
+    ]); 
+    
+
 
 
 
@@ -139,6 +188,19 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'al', 
         'uses' => 'AdminController@alexaCheckBatchWithSchedule'
     ]); 
+
+
+    Route::get('/robot_authorityCheckSchedule', [
+        'as' => 'robot_authorityCheckSchedule', 
+        'uses' => 'AdminController@robot_authorityCheckSchedule'
+    ]); 
+
+    Route::get('/test-curl-raw', [
+        'as' => 'test-curl-raw', 
+        'uses' => 'AdminController@testCurlRaw'
+    ]);
+    
+    
     
     
 

@@ -364,7 +364,25 @@
                                 </li> --}}
                             </ul>
                             <!-- /.nav-second-level -->
-                        </li>   
+                        </li> 
+                        
+                        
+
+                        <li>
+                            <a href="#"><i class="fa fa-heart"></i> سروش <span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href=""><i class="fa fa-table fa-fw"></i> لیست شبکه سروش </a>
+                                </li>
+                                <li>
+                                <a href="{{ route('sapp-insert-show') }}"><i class="fa fa-table fa-fw"></i> رکورد جدید </a>
+                                </li>
+                                {{-- <li>
+                                    <a href=""><i class="fa fa-table fa-fw"></i> بروزرسانی لیست </a>
+                                </li> --}}
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li> 
                         
                         
 

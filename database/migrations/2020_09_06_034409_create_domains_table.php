@@ -30,6 +30,10 @@ class CreateDomainsTable extends Migration
             $table->text('status_code')->nullable();
             // $table->text('server_ud')->nullable();
             $table->text('description')->nullable();
+            $table->text('openrank')->nullable(); // domainRank
+            $table->text('domain_authority')->nullable();
+            $table->text('page_authority')->nullable();
+            
 
             // $table->text('domainAuthority')->nullable();
             // $table->text('externalEquityLinks')->nullable();

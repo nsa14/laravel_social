@@ -33,6 +33,11 @@ class Kernel extends ConsoleKernel
         //Alternatively, you may use var_dump() to view the results in your terminal.
     }
 
+    protected function shortSchedule(shortSchedule $schedule){
+        $schedule->command('robot_authority_checker')->everySecond();
+        // use in terminal >> php artisan make:command robot_authority_checkerCommand
+    }
+
     /**
      * Register the commands for the application.
      *
