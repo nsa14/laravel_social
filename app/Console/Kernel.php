@@ -27,7 +27,11 @@ class Kernel extends ConsoleKernel
     {
         // $folderName = public_path('exports');
         // $schedule->command('inspire')->hourly();
+        
         $schedule->call('\App\Http\Controllers\AdminController@alexaCheckBatchWithSchedule');
+        // $schedule->call('\App\Http\Controllers\AdminController@al');
+        
+        
         // ->everyMinute();
         // ->sendOutputTo(storage_path('logs/222'.date('m-d-Y_H:i:s').'.log'));
         //Alternatively, you may use var_dump() to view the results in your terminal.

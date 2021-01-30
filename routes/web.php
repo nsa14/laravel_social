@@ -159,11 +159,11 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'AdminController@testJavad'
     ]); 
 
- //============== test sorosh get channel count member
- Route::get('/test-sapp', [
-    'as' => 'test-sapp', 
-    'uses' => 'AdminController@get_sapp_data'
-]); 
+    //============== test sorosh get channel count member
+    Route::get('/test-sapp', [
+        'as' => 'test-sapp', 
+        'uses' => 'AdminController@get_sapp_data'
+    ]); 
     
 
 
@@ -179,10 +179,13 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'instagramOreiziAutomaticly', 
         'uses' => 'AdminController@instagramOreiziAutomaticly'
     ]); 
+
+    Route::get('/instagramOreiziAutomaticly2', [
+        'as' => 'instagramOreiziAutomaticly2', 
+        'uses' => 'AdminController@instagramOreiziAutomaticly2'
+    ]); 
+
     
-
-
-
 
     Route::get('/al', [
         'as' => 'al', 

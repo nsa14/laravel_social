@@ -27,6 +27,7 @@ class CreateDomainsTable extends Migration
             $table->text('expertion_date')->nullable();
             $table->boolean('redirect')->nullable();
             $table->text('redirect_to')->nullable();
+            $table->text('status')->nullable(); // 0 server ok  | 1 server down
             $table->text('status_code')->nullable();
             // $table->text('server_ud')->nullable();
             $table->text('description')->nullable();

@@ -71,12 +71,9 @@ class AdminController extends Controller
         // dd($val);
 
         if (empty($val)) {
+            
             // return 'does not eixst this username in instagram.';
-
-            $arrayInstagramResult = array(
-                
-            );
-
+            $arrayInstagramResult = array();
 
         }else{
 
@@ -455,16 +452,16 @@ class AdminController extends Controller
 
                             $likeeTable = likee::find($rowId->id);
 
-                            $likeeTable->nickName =                         $jsonInfo->nick_name;
-                            $likeeTable->userName =                     $jsonInfo->yyuid;
-                            $likeeTable->birthday =               $jsonInfo->birthday;
-                            $likeeTable->countryCode =                  $jsonInfo->exactCountryCode;
-                            $likeeTable->bio =                    $jsonInfo->bio;
-                            $likeeTable->gender =          $jsonInfo->gender;
-                            $likeeTable->age =       $jsonInfo->age;
-                            $likeeTable->fansCount =                   $jsonCount['data']['fansCount'];
-                            $likeeTable->followCount =                  $jsonCount['data']['followCount'];
-                            $likeeTable->likeCount =              $jsonPost['data']['postInfoMap'][$jsonInfo->uid]['allLikeCount'];
+                            $likeeTable->nickName = $jsonInfo->nick_name;
+                            $likeeTable->userName = $jsonInfo->yyuid;
+                            $likeeTable->birthday = $jsonInfo->birthday;
+                            $likeeTable->countryCode = $jsonInfo->exactCountryCode;
+                            $likeeTable->bio = $jsonInfo->bio;
+                            $likeeTable->gender = $jsonInfo->gender;
+                            $likeeTable->age = $jsonInfo->age;
+                            $likeeTable->fansCount = $jsonCount['data']['fansCount'];
+                            $likeeTable->followCount = $jsonCount['data']['followCount'];
+                            $likeeTable->likeCount = $jsonPost['data']['postInfoMap'][$jsonInfo->uid]['allLikeCount'];
                             $likeeTable->videoNums = $jsonPost['data']['postInfoMap'][$jsonInfo->uid]['videoNums'];
                             $likeeTable->image = $jsonInfo->data1;
 
@@ -473,16 +470,16 @@ class AdminController extends Controller
 
                         }else{
 
-                            $likeeTable->nickName =                         $jsonInfo->nick_name;
-                            $likeeTable->userName =                     $jsonInfo->yyuid;
-                            $likeeTable->birthday =               $jsonInfo->birthday;
-                            $likeeTable->countryCode =                  $jsonInfo->exactCountryCode;
-                            $likeeTable->bio =                    $jsonInfo->bio;
-                            $likeeTable->gender =          $jsonInfo->gender;
-                            $likeeTable->age =       $jsonInfo->age;
-                            $likeeTable->fansCount =                   $jsonCount['data']['fansCount'];
-                            $likeeTable->followCount =                  $jsonCount['data']['followCount'];
-                            $likeeTable->likeCount =              $jsonPost['data']['postInfoMap'][$jsonInfo->uid]['allLikeCount'];
+                            $likeeTable->nickName = $jsonInfo->nick_name;
+                            $likeeTable->userName = $jsonInfo->yyuid;
+                            $likeeTable->birthday = $jsonInfo->birthday;
+                            $likeeTable->countryCode = $jsonInfo->exactCountryCode;
+                            $likeeTable->bio = $jsonInfo->bio;
+                            $likeeTable->gender = $jsonInfo->gender;
+                            $likeeTable->age = $jsonInfo->age;
+                            $likeeTable->fansCount = $jsonCount['data']['fansCount'];
+                            $likeeTable->followCount = $jsonCount['data']['followCount'];
+                            $likeeTable->likeCount = $jsonPost['data']['postInfoMap'][$jsonInfo->uid]['allLikeCount'];
                             $likeeTable->videoNums = $jsonPost['data']['postInfoMap'][$jsonInfo->uid]['videoNums'];
                             $likeeTable->image = $jsonInfo->data1;
 
@@ -610,7 +607,6 @@ class AdminController extends Controller
         // multi handle
         $mh = curl_multi_init();
         foreach ($urls as $i => $id) {
-        
             // echo $id;
           // URL from which data will be fetched
           $fetchURL = 'https://likee.com/user/@'.$id.'/?lang=en';
@@ -647,35 +643,30 @@ class AdminController extends Controller
         
                         $resultFan = array();
         
-                            $postdata = http_build_query(
-                                array(
-                                    'uid' => $jsonUid->uid )
-                            );
-                            $opts = array('http' =>
-                                array(
-                                    'method'  => 'POST',
-                                    'header'  => 'Content-type: application/x-www-form-urlencoded',
-                                    'content' => $postdata
-                                )
-                            );
-                            $context  = stream_context_create($opts);
-                            $resultFan = file_get_contents($url_getUserFollow, false, $context);
-        
-                            $context  = stream_context_create($opts);
-                            $resultPost = file_get_contents($url_getUserPostInfo, false, $context);
-        
-        
-                            $arr = array();
-                            $arr['info'] = $match[1];
-                            $arr['count'] = $resultFan;
-                            $arr['post'] = $resultPost;
-        
-                            $result[$k] = ($arr);
-        
-        
-                            // array_push($result, $resultFan);
-        
-        
+                        $postdata = http_build_query(
+                            array(
+                                'uid' => $jsonUid->uid )
+                        );
+                        $opts = array('http' =>
+                            array(
+                                'method'  => 'POST',
+                                'header'  => 'Content-type: application/x-www-form-urlencoded',
+                                'content' => $postdata
+                            )
+                        );
+                        $context  = stream_context_create($opts);
+                        $resultFan = file_get_contents($url_getUserFollow, false, $context);
+    
+                        $context  = stream_context_create($opts);
+                        $resultPost = file_get_contents($url_getUserPostInfo, false, $context);
+    
+                        $arr = array();
+                        $arr['info'] = $match[1];
+                        $arr['count'] = $resultFan;
+                        $arr['post'] = $resultPost;
+    
+                        $result[$k] = ($arr);
+                        // array_push($result, $resultFan);
         
                 }
           curl_multi_remove_handle($mh, $ch);
@@ -784,11 +775,8 @@ class AdminController extends Controller
     }    
 
 
-
-
-
-
    public function alexaCheckShow(){
+
          return view('admin.alexa-add');
    }
 
@@ -829,16 +817,25 @@ class AdminController extends Controller
 
         $getResult = $this->get_alexa_checkRank($splitedArray);
 
+        // this array contain error website status not ok 
+        $statusCodeArray = array();
+        $statusCodeArray[] = 'HTTP/1.0 403 Forbidden';
+        $statusCodeArray[] = 'HTTP/1.1 400 Bad Request';
+        $statusCodeArray[] = 'HTTP/1.1 404 Not Found';
+        $statusCodeArray[] = 'HTTP/1.1 500 Internal Server Error';
+        $statusCodeArray[] = 'HTTP/1.1 503 Service Unavailable';
+        $statusCodeArray[] = 'Server Down';
+        
+
         // return $getResult;
 
         //[{"name":"naser-zare.ir","ranklocal":null,"rankglobal":null,
         //"location":"http:\/\/naser-zare.ir\/cgi-sys\/suspendedpage.cgi","statuscode":"HTTP\/1.1 302 Found"}]
 
-        foreach ($getResult as $key => $value) {       
-
+        foreach ($getResult as $key => $value) {
             // dd($value);            
-
-            // echo $value['name'].$value['ranklocal'][0].'<br>';
+            // echo $value['statuscode'];
+            // return false;
 
             $domainTable = new domains;
 
@@ -847,6 +844,14 @@ class AdminController extends Controller
             $globalRank = ($value['rankglobal'][0] && strtolower($value['rankglobal'][0]) !='n')? $value['rankglobal'][0]: null;
             $localRank =  ($value['ranklocal'][0] && strtolower($value['ranklocal'][0]) !='n')? $value['ranklocal'][0]: null;
             // return $globalRank.$localRank;
+
+            // check for status header site code
+            $serverDown = 0;
+            if (in_array($value['statuscode'], $statusCodeArray))
+            {
+                // server or site down or not found or eny error ...
+                $serverDown = 1;
+            }
 
             // if (domains::where('url', '=', $host[0])->exists()) {
             if (domains::where('full_url', '=', $value['name'])->exists()) {
@@ -863,6 +868,7 @@ class AdminController extends Controller
                 $domainTable->localrank = $localRank;
                 $domainTable->redirect = $redirect_;
                 $domainTable->redirect_to = $value['location'];
+                $domainTable->status = $serverDown;
                 $domainTable->status_code = $value['statuscode'];
                 $domainTable->title =  $value['metaDescriptionUrl'];
                 $domainTable->expertion_date = $value['expireDate'];
@@ -883,6 +889,7 @@ class AdminController extends Controller
                 $domainTable->expertion_date = $value['expireDate'];
                 $domainTable->redirect = $redirect_;
                 $domainTable->redirect_to = $value['location'];
+                $domainTable->status = $serverDown;
                 $domainTable->status_code = $value['statuscode'];
                 // $domainTable->description = 
 
@@ -911,15 +918,18 @@ class AdminController extends Controller
             $arr0 = array();
             global $ranklocal, $rankglobal, $metaDescriptionUrl, $expireDate;
 
+            $ranklocal = null;
+            $rankglobal = null;
+
             foreach ($urls as $i => $url){
 
                 if($socket =@ fsockopen($url, 80, $errno, $errstr, 3)) {
                     // echo 'online!';
                     $xml = @simplexml_load_file("http://data.alexa.com/data?cli=10&url=".$url);
                     // $get_headers = @get_headers('http://'.$url, 1);
+                    // return $get_headers;
                     $responsCode = $this->getHttpResponsCode($url);
                     // dd( $responsCode);
-                    
                     $a = explode("\r\n", $responsCode);
                     $arr0 = array();
                     foreach ($a as $kk){
@@ -945,8 +955,8 @@ class AdminController extends Controller
                             // $arr = array('name' => $url);
                             // $arr = array_add($arr, 'rankgglobal', isset($xml->SD->POPULARITY[0]['TEXT'])? $xml->SD->POPULARITY[0]['TEXT'] : 'not');
                             // $arr = array_add($arr, 'rankglobal', isset($xml->SD->COUNTRY[0]['RANK'])? $xml->SD->COUNTRY[0]['RANK'] : 'not');
-                            $rankglobal = isset($xml->SD->POPULARITY[0]['TEXT'])? $xml->SD->POPULARITY[0]['TEXT'] : 'not';
-                            $ranklocal = isset($xml->SD->COUNTRY[0]['RANK'])? $xml->SD->COUNTRY[0]['RANK'] : 'not';
+                            $rankglobal = isset($xml->SD->POPULARITY[0]['TEXT'])? $xml->SD->POPULARITY[0]['TEXT'] : null;
+                            $ranklocal = isset($xml->SD->COUNTRY[0]['RANK'])? $xml->SD->COUNTRY[0]['RANK'] : null;
 
                             // $headerCode = isset($get_headers[0])? $get_headers[0] : 'not';
                             // $location = isset($get_headers['Location'])? $get_headers['Location'] : 'not';
@@ -962,23 +972,26 @@ class AdminController extends Controller
                             // $arr['ranklocal'] = isset($xml->SD->COUNTRY[0]['RANK'])? $xml->SD->COUNTRY[0]['RANK'] : 'not';
                     
                                         
+                    }else{
+                        $rankglobal = null;
+                        $ranklocal = null;
                     }
 
                     if (isset($arr0)) {
 
                         $headerCode = (@$arr0['HTT']) ? $arr0['HTT'] : 'Server Down';
-                        // $locarion_filter = str_replace(array('http://','https://','www.', '/'), '', @$arr0['Loc']);
-
-
+                        $locarion_filter = str_replace(array('http://','https://','www.', '/'), '', @$arr0['Loc']);
 
                         $parse = @parse_url(@$arr0['Loc']);
                         // return $url .' -> '. $parse['host'];
 
+                        //preg_match("/[a-z0-9\-]{1,63}\.[a-z\.]{2,6}$/", parse_url(@$arr0['Loc'], PHP_URL_HOST), $_domain_tld);
+                        //$redirectLocationHeader = (isset($_domain_tld[0])? $_domain_tld[0] : null);
+                        // ایراد دستور بالا ادرس هایی که حتی به https هم رفته باشد رو ریدایرکت حساب میکند.
 
-
-
-                        // if ($url == $locarion_filter) {
-                        if ($url == @$parse['host']) {
+                        if ($url == $locarion_filter) {
+                        //if ($url == $parse['host']) {
+                        //if ($url == $redirectLocationHeader) {
                             $location = null; // redirect nashode va code 301 dare. roye https redirect shode.
                         }else{
                             $location = @$arr0['Loc']; // redirect shode roye other domain.
@@ -992,32 +1005,27 @@ class AdminController extends Controller
                     }else{
                         $metaDescriptionUrl = null;
                     }
-
                     // $metaDescriptionUrl = null;
 
                         // get expire date domain from howis request
-                    $dataHowis = json_decode(@file_get_contents('https://www.namecheap.com/domains/contactlookup-api/whois/lookupraw/'.$url), 1);
+                    $dataHowis = json_decode(file_get_contents('https://www.namecheap.com/domains/contactlookup-api/whois/lookupraw/'.$url), 1);
                     $suffixUrl = explode('.', $url);
                     if ($suffixUrl[1] == 'ir') {
                         preg_match('/(?<=expire-date:).*?(?=source)/', str_replace("\n","",$dataHowis), $matches);
-                    }elseif($suffixUrl[1] == 'com' || 'net'){
+                    }elseif($suffixUrl[1] == 'com' || 'net' || 'info'){
                         preg_match('/(?<=Expiration Date:).*?(?=Registrar:)/', str_replace("\n","",$dataHowis), $matches);
                     }
                     
                         // var_dump($matches);
                     if(isset($matches)){
-                        $expireDate = isset($matches[0])? $matches[0]: null;
+                        $expireDate = isset($matches[0])? substr($matches[0], 0, 11): null;
                     }else{
                         $expireDate = null;
                     }
-
                     // $expireDate = null;
 
                     $arr = Arr::add(['name' => $url, 'ranklocal' => $ranklocal, 'rankglobal' => $rankglobal, 'location' => $location, 'metaDescriptionUrl' => $metaDescriptionUrl, 'expireDate' => $expireDate], 'statuscode', $headerCode);
-                    
                     $result[$i] = $arr;
-
-                
 
                 fclose($socket);
                 
@@ -1028,11 +1036,9 @@ class AdminController extends Controller
                     
                 } //end if
 
+                sleep(2);
+
             }//end foreach
-
-            
-            // http://data.alexa.com/data?cli=10&url=aboatashtv.ir
-
                 
   
         return $result;
@@ -1049,28 +1055,27 @@ class AdminController extends Controller
         return view('admin.domain-list',compact('allDomains'));
    }
 
-   public function getHttpResponsCode($url){
+   public function getHttpResponsCode($url){   
+        $ch = curl_init(); // create a new CURL resource
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_NOBODY, true);
+        curl_setopt($ch, CURLOPT_HEADER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+        $st= curl_exec($ch);
+        curl_close($ch);
+        return $st;        
+    }
 
-      $ch = curl_init(); // create a new CURL resource
-      curl_setopt($ch, CURLOPT_URL, $url);
-      curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-      curl_setopt($ch, CURLOPT_NOBODY, true);
-      curl_setopt($ch, CURLOPT_HEADER, true);
-      curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
-      $st= curl_exec($ch);
-      curl_close($ch);
-      return $st;
+   
+    public function alexaCheckBatchWithSchedule(){
 
-        
+        // $domainTableTodayDate = domains::where('updated_at', '<', date("Y-m-d"))
+        //                                 ->inRandomOrder()
+        //                                 ->take(5)
+        //                                 ->get(['full_url']);
 
-   }
-
-   public function alexaCheckBatchWithSchedule(){
-        $domainTableTodayDate = domains::where('updated_at', '<', date("Y-m-d"))
-                                        ->inRandomOrder()
-                                        ->take(2)
-                                        ->get(['full_url']);
-        // $domainTableTodayDate = domains::where('id', '=', 8)->get();
+        $domainTableTodayDate = domains::where('id', '=', 490)->get();
         // $instagramLists = instagrams::whereDate('updated_at', '<', date("Y-m-d"))->get();
 
         // return count($domainTableTodayDate);
@@ -1095,7 +1100,18 @@ class AdminController extends Controller
 
         $getResult = $this->get_alexa_checkRank($splitedArray);
 
-        return $getResult;
+        // return $getResult;
+
+        // this array contain error website status not ok 
+        $statusCodeArray = array();
+        $statusCodeArray[] = 'HTTP/1.0 403 Forbidden';
+        $statusCodeArray[] = 'HTTP/1.1 400 Bad Request';
+        $statusCodeArray[] = 'HTTP/1.1 404 Not Found';
+        $statusCodeArray[] = 'HTTP/1.1 500 Internal Server Error';
+        $statusCodeArray[] = 'HTTP/1.1 503 Service Unavailable';
+        $statusCodeArray[] = 'Server Down';
+        
+        
 
         file_put_contents(storage_path('logs/_domain/Schedule_domain'.date('m-d-Y_hia').'.log'), print_r($getResult, true));
 
@@ -1110,17 +1126,25 @@ class AdminController extends Controller
 
             // echo $value['name'].$value['ranklocal'][0].'<br>';
 
-            
-
             $host = explode('.', $value['name']); // explode yjc . ir
             $redirect_ = $value['location']? 1: 0;
             $globalRank = ($value['rankglobal'][0] && strtolower($value['rankglobal'][0]) !='n')? $value['rankglobal'][0]: null;
             $localRank =  ($value['ranklocal'][0] && strtolower($value['ranklocal'][0]) !='n')? $value['ranklocal'][0]: null;
             // return $globalRank.$localRank;
 
-            if (domains::where('url', '=', $host[0])->exists()) {
+            // check for status header site code
+            $serverDown = 0;
+            if (in_array($value['statuscode'], $statusCodeArray))
+            {
+                // server or site down or not found or eny error ...
+                $serverDown = 1;
+            }
+
+
+
+            if (domains::where('full_url', $value['name'])->exists()) {
                 // domain found ... then updated record
-                $rowId = domains::where('url', '=',  $host[0])->first();
+                $rowId = domains::where('full_url',  $value['name'])->first();
                 // return $rowId;
                 // exit();
 
@@ -1128,15 +1152,18 @@ class AdminController extends Controller
 
                 $domainTable = domains::find($rowId->id);
 
-                $domainTable->globalrank = $value['rankglobal'][0];
-                $domainTable->localrank = $value['ranklocal'][0];
+                $domainTable->globalrank = $globalRank;
+                $domainTable->localrank = $localRank;
+                $domainTable->redirect = $redirect_;
                 $domainTable->redirect_to = $value['location'];
+                $domainTable->status = $serverDown;
                 $domainTable->status_code = $value['statuscode'];
                 $domainTable->title =  $value['metaDescriptionUrl'];
                 $domainTable->expertion_date = $value['expireDate'];
 
+
                 $domainTable->save();
-                // Update the "updated_at" column only
+                // Update the "updated_at" column only if data not changed
                 $domainTable->touch();
                 array_push($updatedDomain, $value['name']);
 
@@ -1152,7 +1179,7 @@ class AdminController extends Controller
 
         // Session::flash('alert-class', 'alert-success'); 
         // return redirect()->back();       
-   }
+    }
 
    public function authority(){
         return view('admin.authority-add');
@@ -1622,7 +1649,10 @@ public function instagramOreiziAutomaticly(){
     $data['resultUpdatedFaild'] = null;
  
  
-  $instagramListsTodayDate = instagrams::whereNull('updated_at')->inRandomOrder()->take(40)->get(['username']);
+    //   $instagramListsTodayDate = instagrams::whereNull('updated_at')->inRandomOrder()->take(5)->get(['username']);
+  $instagramListsTodayDate = instagrams::whereNull('updated_at')->inRandomOrder()->take(5)->get(['username']);
+
+    //   return $instagramListsTodayDate;
 
 
  foreach ($instagramListsTodayDate as $key => $value) {
@@ -1685,6 +1715,58 @@ public function instagramOreiziAutomaticly(){
  return ($data);
 }
 
+public function instagramOreiziAutomaticly2(){
+
+
+    // $instagram_username = "alkawtharchannel";
+    // $api_key = "f6aa6c345f715f58cf0936245945edeb";
+    // $response = file_get_contents("https://socialstats.info/api?api_key=$api_key&username=$instagram_username&source=instagram");
+    // $data = json_decode($response);
+
+    $data[] = array();
+    $data['resultUpdatedNow'] = null;
+    $data['resultUpdatedFaild'] = null;
+
+
+    $instagramListsTodayDate = instagrams::whereNull('updated_at')->inRandomOrder()->take(3)->get(['username']);
+
+    //   return $instagramListsTodayDate;
+
+
+    foreach ($instagramListsTodayDate as $key => $value) {
+    // echo $value->username;
+    $response = file_get_contents("https://socialstats.info/report/".$value->username."/instagram");
+    preg_match("'<p class=\"report-header-number\">(.*?)</p>'si", $response, $match);
+    // preg_match("'<h1>(.*?)</h1>'si", $response, $matchName);
+
+        if (empty($match[1])) {
+                            
+            $data['resultUpdatedFaild'] .= $value->username.'*';
+
+        }else{
+
+
+            $instagramTable = instagrams::where('username', '=', $value->username)->first();
+
+            $instagramTable->follower_count =               $match[1];
+
+            $instagramTable->description =                  "";
+            $instagramTable->type =                         "";
+            $instagramTable->status =                       "10";
+
+            $instagramTable->save();
+
+            $data['resultUpdatedNow'] .= $value->username.'*';
+            // array_push($data);
+                sleep(rand(1,2));
+        }
+
+
+    
+    }
+
+    return ($data);
+}
 
     public function get_($url=NULL,$method="GET"){
         $ch = curl_init();
@@ -2020,7 +2102,6 @@ public function instagramOreiziAutomaticly(){
 
         // URL from which data will be fetched
     }
-
 
 
     public function testCurlRaw(){
